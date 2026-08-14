@@ -1,3 +1,34 @@
+/*
+* BSD 3-Clause License
+* 
+* Copyright (c) 2026, Wisdurm
+* 
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+* 
+* 1. Redistributions of source code must retain the above copyright notice, this
+*    list of conditions and the following disclaimer.
+* 
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+* 
+* 3. Neither the name of the copyright holder nor the names of its
+*    contributors may be used to endorse or promote products derived from
+*    this software without specific prior written permission.
+* 
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 class Calendar extends HTMLElement {
 		// Squares, internal use
 		#squares = [];
@@ -70,7 +101,7 @@ class Calendar extends HTMLElement {
 				return (year*365) + (month*30) + day;
 		}
 		
-		reindeer() {
+		#reindeer() {
 				const startDay = (new Date(this.#year, this.#month, 0)).getDay();
 				const days = Calendar.daysInMonth(this.#year, this.#month);
 				this.#title.textContent = `Kalenteri (${this.#month+1}.${this.#year})`;
@@ -110,7 +141,7 @@ class Calendar extends HTMLElement {
 		constructor() {
 				super();
 				const shadowRoot = this.attachShadow({mode: 'open'});
-				var _self = this;
+				let _self = this;
 
 				const cont = document.createElement("table");
 				cont.setAttribute("bgcolor", "#000000");
@@ -130,7 +161,7 @@ class Calendar extends HTMLElement {
 								_self.#month = 11;
 								_self.#year--;
 						}
-						_self.reindeer();
+						_self.#reindeer();
 				});
 				cont.appendChild(b1);
 				
@@ -143,7 +174,7 @@ class Calendar extends HTMLElement {
 								_self.#month = 0;
 								_self.#year++;
 						}
-						_self.reindeer();
+						_self.#reindeer();
 				});
 				cont.appendChild(b2);
 				
@@ -177,15 +208,21 @@ class Calendar extends HTMLElement {
 												const day = b.textContent;
 												const date = `${_self.#year}-${_self.#month}-${day}`;
 												if (!e.altKey && !e.ctrlKey) {
-														_self.#holidays.push(date);
-														b.setAttribute("bgcolor", "#ff0000");
+														if (_self.#holidays.includes(date)) {
+																const index = _self.#holidays.indexOf(date);
+																_self.#holidays.splice(index, 1);
+																_self.#reindeer();
+														} else {
+																_self.#holidays.push(date);
+																b.setAttribute("bgcolor", "#ff0000");
+														}
 												} else {
 														if (e.altKey) {
 																_self.#startDate = date;
 														}else {
 																_self.#endDate = date;
 														}
-														_self.reindeer();
+														_self.#reindeer();
 												}
 										});
 										_self.#squares.push(b);
@@ -199,7 +236,7 @@ class Calendar extends HTMLElement {
 				cont.appendChild(table);
 
 				shadowRoot.appendChild(cont);
-				this.reindeer();
+				this.#reindeer();
 		}
 }
 
