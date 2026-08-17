@@ -100,11 +100,15 @@ class Calendar extends HTMLElement {
 				[year, month, day] = date.split("-").map((x) => parseInt(x));
 				return (year*365) + (month*30) + day;
 		}
+
+		static pad(str) {
+				return str.toString().length == 1 ? `0${str}` : str;
+		}
 		
 		#reindeer() {
 				const startDay = (new Date(this.#year, this.#month - 1, 0)).getDay();
 				const days = Calendar.daysInMonth(this.#year, this.#month - 1);
-				this.#title.textContent = `Kalenteri (${this.#month}.${this.#year})`;
+				this.#title.textContent = `Kalenteri (${Calendar.pad(this.#month)}.${this.#year})`;
 
 				if (days + startDay <= 35) {
 						this.#lastRow.setAttribute("hidden", null);
@@ -124,7 +128,7 @@ class Calendar extends HTMLElement {
 								div.textContent = day;
 						}
 						// Is holiday
-						const date = `${this.#year}-${this.#month}-${day}`;
+						const date = `${this.#year}-${Calendar.pad(this.#month)}-${Calendar.pad(day)}`;
 						const weekday = (new Date(this.#year, this.#month - 1, day-1)).getDay();
 						if (date == this.#startDate || date == this.#endDate) {
 								div.setAttribute("bgcolor", "#ffff00");
@@ -147,7 +151,7 @@ class Calendar extends HTMLElement {
 				cont.setAttribute("bgcolor", "#000000");
 				cont.setAttribute("border", "1");
 				const t = document.createElement("font");
-				t.textContent = `Kalenteri (${this.#month}.${this.#year})`;
+				t.textContent = `Kalenteri (${Calendar.pad(this.#month)}.${this.#year})`;
 				t.setAttribute("color", "#ffffff");
 				this.#title = t
 				cont.appendChild(t);
@@ -206,7 +210,7 @@ class Calendar extends HTMLElement {
 														return;
 												}
 												const day = b.textContent;
-												const date = `${_self.#year}-${_self.#month}-${day}`;
+												const date = `${_self.#year}-${Calendar.pad(_self.#month)}-${Calendar.pad(day)}`;
 												if (!e.altKey && !e.ctrlKey) {
 														if (_self.#holidays.includes(date)) {
 																const index = _self.#holidays.indexOf(date);
