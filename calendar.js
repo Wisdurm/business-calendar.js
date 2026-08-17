@@ -37,7 +37,7 @@ class Calendar extends HTMLElement {
 		// Last row, internal use
 		#lastRow;
 		// Year
-		#year = 2026;
+		#year = (new Date()).getFullYear();
 		get year() {
 				return this.#year;
 		}
@@ -46,9 +46,9 @@ class Calendar extends HTMLElement {
 				this.#reindeer();
 		}	
 		// Month
-		#month = 8 - 1;
+		#month = (new Date()).getMonth() + 1;
 		get month() {
-				return this.month;
+				return this.#month;
 		}
 		set month(x) {
 				this.#month = x;
@@ -102,9 +102,9 @@ class Calendar extends HTMLElement {
 		}
 		
 		#reindeer() {
-				const startDay = (new Date(this.#year, this.#month, 0)).getDay();
-				const days = Calendar.daysInMonth(this.#year, this.#month);
-				this.#title.textContent = `Kalenteri (${this.#month+1}.${this.#year})`;
+				const startDay = (new Date(this.#year, this.#month - 1, 0)).getDay();
+				const days = Calendar.daysInMonth(this.#year, this.#month - 1);
+				this.#title.textContent = `Kalenteri (${this.#month}.${this.#year})`;
 
 				if (days + startDay <= 35) {
 						this.#lastRow.setAttribute("hidden", null);
@@ -125,7 +125,7 @@ class Calendar extends HTMLElement {
 						}
 						// Is holiday
 						const date = `${this.#year}-${this.#month}-${day}`;
-						const weekday = (new Date(this.#year, this.#month, day-1)).getDay();
+						const weekday = (new Date(this.#year, this.#month - 1, day-1)).getDay();
 						if (date == this.#startDate || date == this.#endDate) {
 								div.setAttribute("bgcolor", "#ffff00");
 						} else if (this.#holidays.includes(date) || this.#weekmask[weekday] == '0') {
@@ -157,8 +157,8 @@ class Calendar extends HTMLElement {
 				b1.textContent = "<-  ";
 				b1.onclick = (function() {
 						_self.#month--;
-						if (_self.#month < 0) {
-								_self.#month = 11;
+						if (_self.#month < 1) {
+								_self.#month = 12;
 								_self.#year--;
 						}
 						_self.#reindeer();
@@ -170,8 +170,8 @@ class Calendar extends HTMLElement {
 				b2.textContent = "  ->";
 				b2.onclick = (function() {
 						_self.#month++;
-						if (_self.#month > 11) {
-								_self.#month = 0;
+						if (_self.#month > 12) {
+								_self.#month = 1;
 								_self.#year++;
 						}
 						_self.#reindeer();

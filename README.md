@@ -3,6 +3,8 @@
 This is a simple interactive HTML calendar which allows you to mark days of the
 week and specific days in general, as well as select a period.  
 
+MONTHS ARE 1 INDEXED!!
+
 The custom element has the following properties which may be freely edited:
 - `year`
 - `month`
