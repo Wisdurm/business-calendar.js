@@ -43,7 +43,7 @@ class Calendar extends HTMLElement {
 		}
 		set year(x) {
 				this.#year = x;
-				this.reindeer();
+				this.#reindeer();
 		}	
 		// Month
 		#month = 8 - 1;
@@ -52,7 +52,7 @@ class Calendar extends HTMLElement {
 		}
 		set month(x) {
 				this.#month = x;
-				this.reindeer();
+				this.#reindeer();
 		}
 
 		#weekmask = "1111100";
@@ -61,7 +61,7 @@ class Calendar extends HTMLElement {
 		}
 		set weekmask(x) {
 				this.#weekmask = x;
-				this.reindeer();
+				this.#reindeer();
 		}
 
 		#holidays = [];
@@ -70,7 +70,7 @@ class Calendar extends HTMLElement {
 		}
 		set holidays(x) {
 				this.#holidays = x;
-				this.reindeer();
+				this.#reindeer();
 		}
 		
 		#startDate = "9999-99-99";
@@ -79,7 +79,7 @@ class Calendar extends HTMLElement {
 		}
 		set startDate(x) {
 				this.#startDate = x;
-				this.reindeer();
+				this.#reindeer();
 		}
 		
 		#endDate = "0000-00-00";
@@ -88,7 +88,7 @@ class Calendar extends HTMLElement {
 		}
 		set endDate(x) {
 				this.#endDate = x;
-				this.reindeer();
+				this.#reindeer();
 		}
 
 		static daysInMonth(year, month) {
