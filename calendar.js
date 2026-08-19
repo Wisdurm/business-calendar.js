@@ -91,6 +91,9 @@ class Calendar extends HTMLElement {
 				this.#reindeer();
 		}
 
+		// Can be edited by user?
+		editable = true;
+
 		static daysInMonth(year, month) {
 				return new Date(year, month, 0).getDate();
 		}
@@ -206,7 +209,8 @@ class Calendar extends HTMLElement {
 										b.id = (col + (row-1)*7)+1;
 										b.textContent = (col + (row-1)*7)+1;
 										b.onclick = (function(e) {
-												if (b.textContent == "") {
+												if (!_self.editable
+														|| b.textContent == "") {
 														return;
 												}
 												const day = b.textContent;
