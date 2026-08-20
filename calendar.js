@@ -36,6 +36,7 @@ class Calendar extends HTMLElement {
 		#title;
 		// Last row, internal use
 		#lastRow;
+		#secondLastRow;
 		// Year
 		#year = (new Date()).getFullYear();
 		get year() {
@@ -113,10 +114,15 @@ class Calendar extends HTMLElement {
 				const days = Calendar.daysInMonth(this.#year, this.#month);
 				this.#title.textContent = `Kalenteri (${Calendar.pad(this.#month)}.${this.#year})`;
 
-				if (days + startDay <= 35) {
-						this.#lastRow.setAttribute("hidden", null);
-				} else {
-						this.#lastRow.removeAttribute("hidden");
+				if (days + startDay == 28) {
+						this.#secondLastRow.setAttribute("hidden", null);
+				}	else {
+						this.#secondLastRow.removeAttribute("hidden");
+						if (days + startDay > 35) {
+								this.#lastRow.removeAttribute("hidden");
+						} else {
+								this.#lastRow.setAttribute("hidden", null);
+						}
 				}
 				
 				this.#squares.forEach((div) => {
@@ -242,6 +248,7 @@ class Calendar extends HTMLElement {
 								})();
 								rowDiv.appendChild(box);
 						}
+						this.#secondLastRow = this.#lastRow;
 						this.#lastRow = rowDiv;
 						table.appendChild(rowDiv);
 				}
