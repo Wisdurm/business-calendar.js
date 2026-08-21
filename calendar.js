@@ -99,12 +99,6 @@ class Calendar extends HTMLElement {
 				return new Date(year, month, 0).getDate();
 		}
 
-		static dateValue(date) {
-				let year, month, day;
-				[year, month, day] = date.split("-").map((x) => parseInt(x));
-				return (year*365) + (month*30) + day;
-		}
-
 		static pad(str) {
 				return str.toString().length == 1 ? `0${str}` : str;
 		}
@@ -144,7 +138,7 @@ class Calendar extends HTMLElement {
 						} else if (this.#holidays.includes(date) || this.#weekmask[weekday] == '0') {
 								div.setAttribute("bgcolor", "#ff0000");
 						} else if (this.#startDate != null && this.#endDate != null &&
-											 Calendar.dateValue(date) > Calendar.dateValue(this.#startDate) && Calendar.dateValue(date) < Calendar.dateValue(this.#endDate)) {
+											 date > this.#startDate && date < this.#endDate) {
 								div.setAttribute("bgcolor", "#bbbbbb");
 						} else {
 								div.setAttribute("bgcolor", "#ffffff");
@@ -152,9 +146,7 @@ class Calendar extends HTMLElement {
 				});
 		}
 
-		constructor() {
-				super();
-				const shadowRoot = this.attachShadow({mode: 'open'});
+		connectedCallback() {
 				let _self = this;
 
 				const cont = document.createElement("table");
@@ -235,7 +227,12 @@ class Calendar extends HTMLElement {
 														if (!_self.#startDate) {
 																_self.#startDate = date;
 														} else if (!_self.#endDate) {
-																_self.#endDate = date;
+																if (date < _self.startDate) {
+																		_self.#endDate = _self.#startDate;
+																		_self.#startDate = date;
+																} else {
+																		_self.#endDate = date;
+																}
 														} else {
 																_self.#startDate = date;
 																_self.#endDate = null;
@@ -254,7 +251,7 @@ class Calendar extends HTMLElement {
 				}
 				cont.appendChild(table);
 
-				shadowRoot.appendChild(cont);
+				this.appendChild(cont);
 				this.#reindeer();
 		}
 }
