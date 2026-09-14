@@ -74,21 +74,21 @@ class Calendar extends HTMLElement {
 				this.#reindeer();
 		}
 
-		#startDate = null;
-		get startDate() {
-				return this.#startDate
+		#start_date = null;
+		get start_date() {
+				return this.#start_date
 		}
-		set startDate(x) {
-				this.#startDate = x;
+		set start_date(x) {
+				this.#start_date = x;
 				this.#reindeer();
 		}
 
-		#endDate = null;
-		get endDate() {
-				return this.#endDate
+		#end_date = null;
+		get end_date() {
+				return this.#end_date
 		}
-		set endDate(x) {
-				this.#endDate = x;
+		set end_date(x) {
+				this.#end_date = x;
 				this.#reindeer();
 		}
 
@@ -133,12 +133,12 @@ class Calendar extends HTMLElement {
 						// Is holiday
 						const date = `${this.#year}-${Calendar.pad(this.#month)}-${Calendar.pad(day)}`;
 						const weekday = (new Date(this.#year, this.#month - 1, day-1)).getDay();
-						if (date == this.#startDate || date == this.#endDate) {
+						if (date == this.#start_date || date == this.#end_date) {
 								div.setAttribute("bgcolor", "#ffff00");
 						} else if (this.#holidays.includes(date) || !this.#weekmask[weekday]) {
 								div.setAttribute("bgcolor", "#ff0000");
-						} else if (this.#startDate != null && this.#endDate != null &&
-											 date > this.#startDate && date < this.#endDate) {
+						} else if (this.#start_date != null && this.#end_date != null &&
+											 date > this.#start_date && date < this.#end_date) {
 								div.setAttribute("bgcolor", "#bbbbbb");
 						} else {
 								div.setAttribute("bgcolor", "#ffffff");
@@ -153,8 +153,9 @@ class Calendar extends HTMLElement {
 				if(this.hasAttribute('month')) this.#month = this.getAttribute('month');
 				if(this.hasAttribute('weekmask')) this.#weekmask = JSON.parse(this.getAttribute('weekmask'));
 				if(this.hasAttribute('holidays')) this.#holidays = JSON.parse(this.getAttribute('holidays'));
-				if(this.hasAttribute('start-date')) this.#startDate = this.getAttribute('start-date');
-				if(this.hasAttribute('end-date')) this.#endDate = this.getAttribute('end-date');
+				if(this.hasAttribute('start_date')) this.#start_date = this.getAttribute('start_date');
+				if(this.hasAttribute('end_date')) this.#end_date = this.getAttribute('end_date');
+				if(this.hasAttribute('editable')) this.editable = this.getAttribute('editable');
 
 				const cont = document.createElement("table");
 				cont.setAttribute("bgcolor", "#000000");
@@ -231,18 +232,18 @@ class Calendar extends HTMLElement {
 																b.setAttribute("bgcolor", "#ff0000");
 														}
 												} else {
-														if (!_self.#startDate) {
-																_self.#startDate = date;
-														} else if (!_self.#endDate) {
-																if (date < _self.startDate) {
-																		_self.#endDate = _self.#startDate;
-																		_self.#startDate = date;
+														if (!_self.#start_date) {
+																_self.#start_date = date;
+														} else if (!_self.#end_date) {
+																if (date < _self.start_date) {
+																		_self.#end_date = _self.#start_date;
+																		_self.#start_date = date;
 																} else {
-																		_self.#endDate = date;
+																		_self.#end_date = date;
 																}
 														} else {
-																_self.#startDate = date;
-																_self.#endDate = null;
+																_self.#start_date = date;
+																_self.#end_date = null;
 														}
 														_self.#reindeer();
 												}
@@ -263,8 +264,8 @@ class Calendar extends HTMLElement {
 		}
 
 		static get observedAttributes() { return ['year', 'month', 'weekmask',
-																							'holidays', 'start-date',
-																							'end-date']; }
+																							'holidays', 'start_date',
+																							'end_date', 'editable']; }
 
 		attributeChangedCallback(name, oldValue, newValue) {
 				try {
