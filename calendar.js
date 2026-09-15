@@ -104,6 +104,10 @@ class Calendar extends HTMLElement {
 		}
 
 		#reindeer() {
+				// If not initialized yet, dont update
+				if (!this.#title)
+						return;
+
 				const startDay = (new Date(this.#year, this.#month - 1, 0)).getDay();
 				const days = Calendar.daysInMonth(this.#year, this.#month);
 				this.#title.textContent = `Kalenteri (${Calendar.pad(this.#month)}.${this.#year})`;
@@ -155,7 +159,7 @@ class Calendar extends HTMLElement {
 				if(this.hasAttribute('holidays')) this.#holidays = JSON.parse(this.getAttribute('holidays'));
 				if(this.hasAttribute('start_date')) this.#start_date = this.getAttribute('start_date');
 				if(this.hasAttribute('end_date')) this.#end_date = this.getAttribute('end_date');
-				if(this.hasAttribute('editable')) this.editable = this.getAttribute('editable');
+				if(this.hasAttribute('editable')) this.editable = JSON.parse(this.getAttribute('editable'));
 
 				const cont = document.createElement("table");
 				cont.setAttribute("bgcolor", "#000000");
@@ -163,7 +167,7 @@ class Calendar extends HTMLElement {
 				const t = document.createElement("font");
 				t.textContent = `Kalenteri (${Calendar.pad(this.#month)}.${this.#year})`;
 				t.setAttribute("color", "#ffffff");
-				this.#title = t
+				this.#title = t;
 				cont.appendChild(t);
 
 				const b1 = document.createElement("font");
